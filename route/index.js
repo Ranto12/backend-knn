@@ -8,19 +8,19 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/users', verifyToken, getuserAll)
-router.post('/register', Register)
-router.post('/login', LoginLaman)
-router.post('/logout',verifyToken, Logout)
+router.get('/users', verifyToken, getuserAll);
+router.post('/register', Register);
+router.post('/login', LoginLaman);
+router.post('/logout',verifyToken, Logout);
 
-router.post('/file',upload.single('file'),verifyToken, UploadFileExel)
-router.post('/createRecomendation',verifyToken, CreateDataRekomendation)
-router.post('/updateRecomendation',verifyToken, EditDataRekomendation)
-router.post('/deleteRekomendation',verifyToken, DeleteDataRekomendation)
-router.get('/getDatarekomendasiByid',verifyToken, getDatarekomendasiById)
-router.get('/getAllDataRekomendasi',verifyToken, getDatarekomendasiAll)
+router.post('/file',upload.single('file'),verifyToken, UploadFileExel);
+router.post('/createRecomendation',verifyToken, CreateDataRekomendation);
+router.post('/updateRecomendation',verifyToken, EditDataRekomendation);
+router.delete('/deleteRekomendation',verifyToken, DeleteDataRekomendation);
+router.get('/getDatarekomendasiByid',verifyToken, getDatarekomendasiById);
+router.get('/getAllDataRekomendasi',verifyToken, getDatarekomendasiAll);
 
 
 module.exports = router;

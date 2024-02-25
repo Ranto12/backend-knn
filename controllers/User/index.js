@@ -36,7 +36,8 @@ const Login = async (username, password) => {
 
     if (user && await bcrypt.compare(password, user.password_hash)) {
       const token = jwt.sign({
-        email: user.email
+        email: user.email,
+        username: user.username,
     }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn : '1d'
     })
