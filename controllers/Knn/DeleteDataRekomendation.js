@@ -1,28 +1,30 @@
-const connection = require("../../config/db");
+const { executeQuery, getLastInsertedId } = require("../utils");
+const { deleteRekomendasi, getbyIdRekomendasi } = require("./Query");
 
-const DeleteDataRekomendation = async (req, res) => {
+const DeleteDataRekomendation = async (req, res, next) => {
   try {
-    const deleteQuery = "DELETE FROM Rekomendasi WHERE rekomendasi_id = ?";
-    connection.execute(deleteQuery, [req.body.id], (err) => {
-      if (err) {
-        console.error("Error delete data rekomendation:", err);
-        return res
-          .status(500)
-          .json({ error: err, message: "Error delete data rekomendation" });
-      }
-      console.log("User created successfully");
-      res.status(201).json({
-        message: "Deletion successful",
-        data: {
-          id: req.body.id,
-        },
+    if (!req.body) {
+      return res.status(400).json({ success: false, message: "Data kosong" });
+    }
+    const idRekomendasi = await executeQuery(getbyIdRekomendasi, [req.body.id]);
+    if (idRekomendasi.length === 0) {
+      return res.json({
+        success: false,
+        message: "data tidak tersedia.",
       });
-    });
+    }
 
-    console.log("Deletion successful");
+    const rekomendasiId = await getLastInsertedId();
+    await executeQuery(deleteRekomendasi, [rekomendasiId]);
+    return res.json({
+      success: true,
+      message: "success delete data.",
+      idRekomendasi,
+    });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ success: false, message: "Internal server error." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error." });
   }
 };
 

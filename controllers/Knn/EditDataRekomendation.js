@@ -1,51 +1,75 @@
-const connection = require("../../config/db");
-const EditDataRekomendation = async (req, res) => {
-  const { id, rekomendasi } = req.body;
-  const {
-    nitrogen,
-    fosfor,
-    kalium,
-    temperature,
-    humadity,
-    rainfall,
-    ph,
-    plant,
-  } = rekomendasi;
+const { executeQuery, getLastInsertedId } = require("../utils");
+const { getDataIdTanaman, createDataTanaman, updateRekomendasiQuery, getDatahamaId, createDatahama, DeleteRekomendasiHama, insertRekomendasiHama } = require("./Query");
 
+const EditDataRekomendation = async (req, res) => {
   try {
-    const udpateknnQuery = `
-        UPDATE rekomendasi SET nitrogen = ?, fosfor = ?, kalium = ?, temperature = ?, humadity = ?, rainfall = ?,  ph = ?, plant = ? WHERE rekomendasi_id = ?;`;
-    // Eksekusi pernyataan SQL untuk menyimpan pengguna baru
-    connection.execute(
-      udpateknnQuery,
-      [
+    if (!req.body) {
+      return res.status(400).json({ success: false, message: "data kosong" });
+    }
+    const {
+      id,
+      nitrogen,
+      fosfor,
+      kalium,
+      temperature,
+      humadity,
+      rainfall,
+      ph,
+      tanaman,
+      namaHama,
+    } = req.body;
+    let IdTanaman = await executeQuery(getDataIdTanaman, [`${tanaman}`]);
+    if (IdTanaman.length === 0) {
+      await executeQuery(createDataTanaman, [tanaman]);
+      const DataIdTanaman = await getLastInsertedId();
+      await executeQuery(updateRekomendasiQuery, [
         nitrogen,
         fosfor,
         kalium,
         temperature,
-        humadity,
         rainfall,
         ph,
-        plant,
+        DataIdTanaman,
+        humadity,
         id,
-      ],
-      (err, result) => {
-        if (err) {
-          console.error("Error update data rekomendation:", err);
-          return res
-            .status(500)
-            .json({ error: err, message: "Error update data rekomendation" });
-        }
-        console.log("User created successfully");
-        res.status(201).json({
-          message: "Rekomendation update successfully",
-          data: { id: result.insertId },
-        });
+      ]);
+    } else {
+      await executeQuery(updateRekomendasiQuery, [
+        nitrogen,
+        fosfor,
+        kalium,
+        temperature,
+        rainfall,
+        ph,
+        IdTanaman.map((_id) => _id.plant_id),
+        humadity,
+        id,
+      ]);
+    }
+    await executeQuery(DeleteRekomendasiHama, [id]);
+    const semuHama = namaHama.split(", ")
+    for (const hama of semuHama) {
+      console.log("di eksekusi ")
+      let idHama = await executeQuery(getDatahamaId, [`${hama}`]);
+      if (idHama.length === 0) {
+        await executeQuery(createDatahama, [hama]);
+        const dataId = await getLastInsertedId();
+        await executeQuery(insertRekomendasiHama, [id, dataId]);
+      } else {
+        await executeQuery(insertRekomendasiHama, [
+          id,
+          idHama[0].hama_id,
+        ]);
       }
-    );
+    }
+    return res.status(200).json({
+      success: true,
+      message: "success update data",
+      id,
+    })
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ success: false, message: "Internal server error." });
+    console.log(error)
+    return res.status(500).json({ success: false, message: "Internal server error." });
   }
 };
 

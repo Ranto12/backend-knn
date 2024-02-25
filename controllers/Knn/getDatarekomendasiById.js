@@ -1,26 +1,21 @@
-const connection = require("../../config/db");
-const getDatarekomendasiById = async (req, res) => {
-  const getbyIdQuery = "SELECT * FROM Rekomendasi WHERE rekomendasi_id = ?";
-  try {
-    const [rows] = await connection
-      .promise()
-      .query(getbyIdQuery, [req.query.id]);
+const { executeQuery } = require("../utils");
+const { getDataRekomendasiById } = require("./Query");
 
-    if (rows.length > 0) {
-      res.json({
-        success: true,
-        message: "Success get data by ID",
-        data: rows[0],
-      });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: "Data not found for the specified ID",
-      });
+const getDatarekomendasiById = async (req, res) => {
+  try {
+    if (!req.query.id) {
+      return res.status(400).json({ success: false, message: "Data kosong" });
     }
+    const data = await executeQuery(getDataRekomendasiById, [req.query.id])
+    res.status(200).json({
+      success: true,
+      data : data[0],
+    })
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ success: false, message: "Internal server error." });
+    res.status(400).json({
+      status: "error",
+      success: true
+    })
   }
 };
 
