@@ -1,8 +1,8 @@
 const express = require('express');
+const multer = require('multer');
 const {Register, LoginLaman, getuserAll, Logout} = require('../controllers/User');
 const verifyToken = require('../middleware/verifyToken');
-const { UploadFileExel, CreateDataRekomendation, EditDataRekomendation, DeleteDataRekomendation, getDatarekomendasiById, getDatarekomendasiAll, CreateDataHama, UpdateDataHama, DeleteDataHama, GetAllhama, GetDataById } = require('../controllers/Knn');
-const multer = require('multer');
+const { UploadFileExel, CreateDataRekomendation, EditDataRekomendation, DeleteDataRekomendation, getDatarekomendasiById, getDatarekomendasiAll, CreateDataHama, UpdateDataHama, DeleteDataHama, GetAllhama, GetDataById, CreateTanaman, UpdateDataTanaman, GetAllTanaman, GetDataTanamanById, DeleteDataTanaman } = require('../controllers/Knn');
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
@@ -28,6 +28,13 @@ router.post('/updateDataHama',verifyToken, UpdateDataHama);
 router.post('/DeleteDataHama',verifyToken, DeleteDataHama);
 router.get('/getAllDataHama',verifyToken, GetAllhama);
 router.get('/getGetDataById',verifyToken, GetDataById);
+
+// tanaman 
+router.post('/createTanamam', verifyToken, CreateTanaman)
+router.post('/updateDataTanaman', verifyToken, UpdateDataTanaman)
+router.get('/getAllDataTanaman', verifyToken, GetAllTanaman)
+router.get('/getDataTanamanById', verifyToken, GetDataTanamanById)
+router.post('/deleteTanaman', verifyToken, DeleteDataTanaman)
 
 
 

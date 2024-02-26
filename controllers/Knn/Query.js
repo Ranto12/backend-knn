@@ -1,11 +1,32 @@
+// tanaman 
 const getDataIdTanaman = `select plant_id from tanaman where nama_tanaman= ?;`;
-const insertRekomendasiQuery = `INSERT INTO Rekomendasi (nitrogen, fosfor, kalium, temperature, rainfall, ph, plant_id, humadity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-const insertRekomendasiHama = `INSERT INTO Rekomendasi_Hama (rekomendasi_id, hama_id) VALUES (?, ?)`;
+const createDataTanaman = `INSERT INTO Tanaman (nama_tanaman) VALUES (?)`;
+const updateDataTanaman = `UPDATE tanaman SET nama_tanaman = ? WHERE plant_id = ?`;
+const getDataTanamanById = `select * from tanaman where nama_tanaman = ? `;
+const getDataTanamanByID = `select * from tanaman where plant_id = ? `;
+const getDataTanamanAll = `select * from tanaman
+where nama_tanaman LIKE ?
+order by
+    plant_id desc
+limit  ?
+offset  ?`;
+const deleteTanaman = `DELETE FROM tanaman WHERE plant_id = ?`;
+// hama 
 const getDatahamaId = `select hama_id FROM hama where nama_hama = ?;`;
 const getDatahamaIdByeId = `select hama_id FROM hama where hama_id = ?;`;
 const createDatahama = `INSERT INTO Hama (nama_hama) VALUES (?)`;
 const updateDataHama = `UPDATE Hama SET nama_hama = ? WHERE hama_id = ?`;
-const createDataTanaman = `INSERT INTO Tanaman (nama_tanaman) VALUES (?)`;
+const getAllHama = `select * from hama
+where
+    nama_hama LIKE ?
+limit ? offset ?;`;
+const getHamaById = `select * from hama where hama_id = ?`;
+const Deletehama = `DELETE FROM hama WHERE hama_id = ?;`;
+
+// rekomendasi 
+const GetRekomendasiByPlantId = `select rekomendasi_id from rekomendasi where plant_id = ?`;
+const GetRekomendasiByHamaId = `select rekomendasi_id from rekomendasi_hama where hama_id = ?`;
+const insertRekomendasiQuery = `INSERT INTO Rekomendasi (nitrogen, fosfor, kalium, temperature, rainfall, ph, plant_id, humadity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 const getAllDataRekomendasi = `SELECT
     r.rekomendasi_id,
     r.nitrogen,
@@ -36,7 +57,6 @@ order by
     r.rekomendasi_id desc
 limit ?
 offset ?`;
-
 const getDataRekomendasiById = `SELECT
 r.rekomendasi_id,
 r.nitrogen,
@@ -61,19 +81,13 @@ Hama h ON rh.hama_id = h.hama_id
 where r.rekomendasi_id = ?
 GROUP BY
 r.rekomendasi_id;`;
-
-const getAllHama = `select * from hama
-where
-    nama_hama LIKE ?
-limit ? offset ?;`;
-const getHamaById = `select * from hama where hama_id = ?`;
 const deleteRekomendasi = "DELETE FROM Rekomendasi WHERE rekomendasi_id = ?";
 const getbyIdRekomendasi = "SELECT * FROM Rekomendasi WHERE rekomendasi_id = ?";
-
 const updateRekomendasiQuery = `UPDATE Rekomendasi SET nitrogen = ?, fosfor = ?, kalium = ?, temperature = ?, rainfall = ?, ph = ?, plant_id = ?, humadity = ? WHERE rekomendasi_id = ?`;
 
+// rekomendasi hama 
 const DeleteRekomendasiHama = `DELETE FROM rekomendasi_hama WHERE rekomendasi_id = ?`;
-const Deletehama = `DELETE FROM hama WHERE hama_id = ?;`;
+const insertRekomendasiHama = `INSERT INTO Rekomendasi_Hama (rekomendasi_id, hama_id) VALUES (?, ?)`;
 
 module.exports = {
   getDataIdTanaman,
@@ -92,5 +106,12 @@ module.exports = {
   getDatahamaIdByeId,
   Deletehama,
   getAllHama,
-  getHamaById
+  getHamaById,
+  getDataTanamanById,
+  getDataTanamanAll,
+  updateDataTanaman,
+  getDataTanamanByID,
+  GetRekomendasiByPlantId,
+  deleteTanaman,
+  GetRekomendasiByHamaId,
 };

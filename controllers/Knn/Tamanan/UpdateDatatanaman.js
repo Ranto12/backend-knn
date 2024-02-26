@@ -1,19 +1,17 @@
 const {executeQuery} = require('../../utils')
-const { updateDataHama, getDatahamaIdByeId } = require('../Query')
+const { updateDataTanaman } = require('../Query')
 
-const UpdateDataHama = async (req, res, next) => {
+const UpdateDataTanaman = async (req, res, next) => {
+        const { nama_tanaman, plant_id } = req.body;
   try {
     if (!req.body) {
       return res.status(400).json({ success: false, message: "Data kosong" });
     }
-    const { hama, hama_id } = req.body;
-    let idHama = await executeQuery(getDatahamaIdByeId, [`${hama_id}`]);
-    if (idHama.length !== 0) {
-      await executeQuery(updateDataHama, [hama, hama_id]);
+    if (nama_tanaman.length !== 0) {
+      await executeQuery(updateDataTanaman, [nama_tanaman, parseInt(plant_id)]);
      return res.status(201).json({
         success: true,
-        message: "success update data hama",
-        id_hama : idHama[0].hama_id
+        message: "success update data tanaman",
       });
     } else {
      return res.status(201).json({
@@ -26,4 +24,4 @@ const UpdateDataHama = async (req, res, next) => {
   }
 };
 
-module.exports = UpdateDataHama;
+module.exports = UpdateDataTanaman;
