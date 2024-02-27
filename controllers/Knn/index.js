@@ -16,6 +16,9 @@ const UpdateDataTanaman = require("./Tamanan/UpdateDatatanaman");
 const GetDataTanamanById = require("./Tamanan/getDataById");
 const DeleteDataTanaman = require("./Tamanan/DeleteTanaman");
 
+// rekomendation 
+const Recomendation = require('./Recomendation/Recomendation')
+
 module.exports = {
   UploadFileExel,
   CreateDataRekomendation,
@@ -32,5 +35,6 @@ module.exports = {
   GetAllTanaman,
   UpdateDataTanaman,
   GetDataTanamanById,
-  DeleteDataTanaman
+  DeleteDataTanaman,
+  Recomendation,
 };

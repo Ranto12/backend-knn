@@ -11,6 +11,7 @@ order by
 limit  ?
 offset  ?`;
 const deleteTanaman = `DELETE FROM tanaman WHERE plant_id = ?`;
+
 // hama 
 const getDatahamaId = `select hama_id FROM hama where nama_hama = ?;`;
 const getDatahamaIdByeId = `select hama_id FROM hama where hama_id = ?;`;
@@ -89,6 +90,39 @@ const updateRekomendasiQuery = `UPDATE Rekomendasi SET nitrogen = ?, fosfor = ?,
 const DeleteRekomendasiHama = `DELETE FROM rekomendasi_hama WHERE rekomendasi_id = ?`;
 const insertRekomendasiHama = `INSERT INTO Rekomendasi_Hama (rekomendasi_id, hama_id) VALUES (?, ?)`;
 
+
+// rekomendation 
+const getDataRekomendation = ` SELECT
+r.rekomendasi_id,
+r.nitrogen,
+r.fosfor,
+r.kalium,
+r.temperature,
+r.humadity,
+r.rainfall,
+r.ph,
+t.plant_id,
+t.nama_tanaman,
+GROUP_CONCAT(h.hama_id) AS hama_ids,
+GROUP_CONCAT(h.nama_hama) AS nama_hama
+FROM
+Rekomendasi r
+JOIN
+Tanaman t ON r.plant_id = t.plant_id
+LEFT JOIN
+Rekomendasi_Hama rh ON r.rekomendasi_id = rh.rekomendasi_id
+LEFT JOIN
+Hama h ON rh.hama_id = h.hama_id
+WHERE
+EXISTS (
+    SELECT 1
+    FROM Rekomendasi_Hama rh_inner
+    WHERE rh_inner.rekomendasi_id = r.rekomendasi_id
+    AND rh_inner.hama_id IN (?)
+)
+GROUP BY
+r.rekomendasi_id`
+
 module.exports = {
   getDataIdTanaman,
   insertRekomendasiQuery,
@@ -114,4 +148,5 @@ module.exports = {
   GetRekomendasiByPlantId,
   deleteTanaman,
   GetRekomendasiByHamaId,
+  getDataRekomendation
 };

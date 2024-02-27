@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const {Register, LoginLaman, getuserAll, Logout} = require('../controllers/User');
 const verifyToken = require('../middleware/verifyToken');
-const { UploadFileExel, CreateDataRekomendation, EditDataRekomendation, DeleteDataRekomendation, getDatarekomendasiById, getDatarekomendasiAll, CreateDataHama, UpdateDataHama, DeleteDataHama, GetAllhama, GetDataById, CreateTanaman, UpdateDataTanaman, GetAllTanaman, GetDataTanamanById, DeleteDataTanaman } = require('../controllers/Knn');
+const { UploadFileExel, CreateDataRekomendation, EditDataRekomendation, DeleteDataRekomendation, getDatarekomendasiById, getDatarekomendasiAll, CreateDataHama, UpdateDataHama, DeleteDataHama, GetAllhama, GetDataById, CreateTanaman, UpdateDataTanaman, GetAllTanaman, GetDataTanamanById, DeleteDataTanaman, Recomendation } = require('../controllers/Knn');
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
@@ -37,6 +37,8 @@ router.get('/getDataTanamanById', verifyToken, GetDataTanamanById)
 router.post('/deleteTanaman', verifyToken, DeleteDataTanaman)
 
 
+// rekomendation 
+router.post('/Recomendation', verifyToken, Recomendation)
 
 
 module.exports = router;
