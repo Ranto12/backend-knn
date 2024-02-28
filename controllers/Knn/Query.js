@@ -1,4 +1,4 @@
-// tanaman 
+// tanaman
 const getDataIdTanaman = `select plant_id from tanaman where nama_tanaman= ?;`;
 const createDataTanaman = `INSERT INTO Tanaman (nama_tanaman) VALUES (?)`;
 const updateDataTanaman = `UPDATE tanaman SET nama_tanaman = ? WHERE plant_id = ?`;
@@ -12,7 +12,7 @@ limit  ?
 offset  ?`;
 const deleteTanaman = `DELETE FROM tanaman WHERE plant_id = ?`;
 
-// hama 
+// hama
 const getDatahamaId = `select hama_id FROM hama where nama_hama = ?;`;
 const getDatahamaIdByeId = `select hama_id FROM hama where hama_id = ?;`;
 const createDatahama = `INSERT INTO Hama (nama_hama) VALUES (?)`;
@@ -20,11 +20,12 @@ const updateDataHama = `UPDATE Hama SET nama_hama = ? WHERE hama_id = ?`;
 const getAllHama = `select * from hama
 where
     nama_hama LIKE ?
+    order by hama_id desc
 limit ? offset ?;`;
 const getHamaById = `select * from hama where hama_id = ?`;
 const Deletehama = `DELETE FROM hama WHERE hama_id = ?;`;
 
-// rekomendasi 
+// rekomendasi
 const GetRekomendasiByPlantId = `select rekomendasi_id from rekomendasi where plant_id = ?`;
 const GetRekomendasiByHamaId = `select rekomendasi_id from rekomendasi_hama where hama_id = ?`;
 const insertRekomendasiQuery = `INSERT INTO Rekomendasi (nitrogen, fosfor, kalium, temperature, rainfall, ph, plant_id, humadity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -86,13 +87,12 @@ const deleteRekomendasi = "DELETE FROM Rekomendasi WHERE rekomendasi_id = ?";
 const getbyIdRekomendasi = "SELECT * FROM Rekomendasi WHERE rekomendasi_id = ?";
 const updateRekomendasiQuery = `UPDATE Rekomendasi SET nitrogen = ?, fosfor = ?, kalium = ?, temperature = ?, rainfall = ?, ph = ?, plant_id = ?, humadity = ? WHERE rekomendasi_id = ?`;
 
-// rekomendasi hama 
+// rekomendasi hama
 const DeleteRekomendasiHama = `DELETE FROM rekomendasi_hama WHERE rekomendasi_id = ?`;
 const insertRekomendasiHama = `INSERT INTO Rekomendasi_Hama (rekomendasi_id, hama_id) VALUES (?, ?)`;
 
-
-// rekomendation 
-const getDataRekomendation = ` SELECT
+// rekomendation
+const getDataRekomendation = `SELECT
 r.rekomendasi_id,
 r.nitrogen,
 r.fosfor,
@@ -120,8 +120,8 @@ EXISTS (
     WHERE rh_inner.rekomendasi_id = r.rekomendasi_id
     AND rh_inner.hama_id IN (?)
 )
-GROUP BY
-r.rekomendasi_id`
+GROUP BY    
+r.rekomendasi_id;`;
 
 module.exports = {
   getDataIdTanaman,
@@ -148,5 +148,5 @@ module.exports = {
   GetRekomendasiByPlantId,
   deleteTanaman,
   GetRekomendasiByHamaId,
-  getDataRekomendation
+  getDataRekomendation,
 };

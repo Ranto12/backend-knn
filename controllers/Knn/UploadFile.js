@@ -69,8 +69,11 @@ const UploadFileExel = async (req, res, next) => {
       const rekomendasiId = await getLastInsertedId();
 
       // Insert data into Rekomendasi_Hama table
-      const semuHama = namaHama.split(", ");
-      for (const hama of semuHama) {
+      const semuHama = namaHama.split(",");
+
+    // Konversi kembali ke dalam array
+    const uniqueNamaHamaArray = Array.from(new Set(semuHama.map(item => item.trim()))).filter(item => item !== "");
+      for (const hama of uniqueNamaHamaArray) {
         let idHama = await executeQuery(getDatahamaId, [`${hama}`]);
         if (idHama.length === 0) {
           await executeQuery(createDatahama, [hama]);
@@ -89,6 +92,7 @@ const UploadFileExel = async (req, res, next) => {
     }
     res.json({ success: true, message: "Data inserted successfully." });
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ success: false, message: "Internal server error." });
   }
 };

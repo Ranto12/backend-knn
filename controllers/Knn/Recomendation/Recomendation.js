@@ -14,40 +14,60 @@ const Recomendation = async (req, res) => {
         humadity,
         rainfall,
         ph,
-        plant_id,
         hama
      } = req.body;
-    const dataRecomendation = await executeQuery(getDataRekomendation, [req.body.hama])
-    const hasil = [];
+     const hamaIds = req.body.hama.slice(', ').map(item => parseInt(item));
+    const dataRecomendation = await executeQuery(getDataRekomendation, [[...hamaIds]])
 
     function hitungKesamaan(arr1, arr2) {
       const kesamaan = arr1.filter(item => arr2.includes(item));
       return kesamaan.length;
   }
-    dataRecomendation.forEach(recomendation => {
-        const {
-          nitrogen: recomNitrogen,
-          fosfor: recomFosfor,
-          kalium: recomKalium,
-          temperature: recomTemperature,
-          humadity: recomHumadity,
-          rainfall: recomRainfall,
-          ph: recomPh,
-          hama_ids: recomhamaId,
-          nama_hama: recomNamaHama
-        } = recomendation;
-        const LengthSamehama = hitungKesamaan(hama, recomhamaId.split(`,`))
-        console.log(recomhamaId.slice(','))
+  const nilai = [];
+    dataRecomendation.forEach((recomendation, index) => {
+      const LengthSamehama = hitungKesamaan(hama, recomendation.hama_ids.split(",").map(Number))
+      const {
+        nitrogen: recomNitrogen,
+        fosfor: recomFosfor,
+        kalium: recomKalium,
+        temperature: recomTemperature,
+        humadity: recomHumadity,
+        rainfall: recomRainfall,
+        ph: recomPh,
+      } = recomendation;
+      const hasilPerhitungan = Math.sqrt(
+        (recomNitrogen - nitrogen) ** 2 
+        +
+        (recomFosfor - fosfor) ** 2 
+        +
+        (recomKalium - kalium) ** 2 
+        +
+        (recomTemperature - temperature) ** 2 
+        +
+        (recomHumadity - humadity) ** 2 
+        +
+        (recomRainfall - rainfall) ** 2 
+        +
+        (recomPh - ph) ** 2 
+        +
+        (LengthSamehama - hama.length) ** 2
+    );
+    nilai.push({
+      ...recomendation,
+      LengthSamehama,
+      hasilPerhitungan: hasilPerhitungan,
+    })
     });
-    
-    
+
+    nilai.sort((a, b) => a.hasilPerhitungan - b.hasilPerhitungan);
+
+    const limaDataTerkecil = nilai.slice(0, 5);
 
     return res.status(201).json({
         success: true,
         status: "success get data",
-        totalData: dataRecomendation.length,
-        cek: req.body,
-        dataRecomendation, 
+        totalData: limaDataTerkecil.length,
+        data: limaDataTerkecil
     })
     
   } catch (error) {
