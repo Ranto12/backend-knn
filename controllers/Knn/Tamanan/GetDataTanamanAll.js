@@ -1,5 +1,5 @@
 const { executeQuery } = require("../../utils");
-const { getDataTanamanAll } = require("../Query");
+const { getDataTanamanAll, GetLengthTanaman } = require("../Query");
 
 const GetAllTanaman = async (req, res) => {
   const {limit, offset, search} = req.query
@@ -10,10 +10,11 @@ const GetAllTanaman = async (req, res) => {
       .json({ success: false, message: "error" });
     }
     const data = await executeQuery(getDataTanamanAll, [`%${search}%`, parseInt(limit), parseInt(offset)]);
+    const lengData = await executeQuery(GetLengthTanaman, [`%${search}%`])
     res.status(200).json({
       success: true,
       massage: "succes get data",
-      totalData: data.length,
+      totalData: lengData[0].total_data,
       data
     })
   } catch (error) {

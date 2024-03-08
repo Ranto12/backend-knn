@@ -1,5 +1,5 @@
 const { executeQuery } = require("../utils");
-const { getAllDataRekomendasi } = require("./Query");
+const { getAllDataRekomendasi, GetLengthRekomendasi } = require("./Query");
 const getDatarekomendasiAll = async (req, res) => {
   const {limit, offset, search} = req.query
   try {
@@ -9,10 +9,11 @@ const getDatarekomendasiAll = async (req, res) => {
       .json({ success: false, message: "error" });
     }
     const data = await executeQuery(getAllDataRekomendasi, [`%${search}%`, `%${search}%`, parseInt(limit), parseInt(offset)]);
+    const GetdataLength = await executeQuery(GetLengthRekomendasi, [`%${search}%`, `%${search}%`])
     res.status(200).json({
       success: true,
       massage: "data ready",
-      totalData: data.length,
+      totalData: GetdataLength[0].total_data,
       data
     })
   } catch (error) {

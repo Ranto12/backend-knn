@@ -1,5 +1,5 @@
 const { executeQuery } = require("../../utils");
-const { getAllHama } = require("../Query");
+const { getAllHama, GetLengthHama } = require("../Query");
 
 const GetAllhama = async (req, res) => {
   const {limit, offset, search} = req.query
@@ -10,10 +10,11 @@ const GetAllhama = async (req, res) => {
       .json({ success: false, message: "error" });
     }
     const data = await executeQuery(getAllHama, [`%${search}%`, parseInt(limit), parseInt(offset)]);
+    const lengthHama = await executeQuery(GetLengthHama, [`%${search}%`])
     res.status(200).json({
       success: true,
       massage: "succes get data",
-      totalData: data.length,
+      totalData: lengthHama[0].total_data,
       data
     })
   } catch (error) {

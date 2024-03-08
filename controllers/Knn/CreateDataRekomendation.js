@@ -44,8 +44,9 @@ const CreateDataRekomendation = async (req, res) => {
       ]);
     }
     const rekomendasiId = await getLastInsertedId();
-    const semuHama = namaHama.split(", ");
-    for (const hama of semuHama) {
+    const semuHama = namaHama.split(",");
+    const uniqueNamaHamaArray = Array.from(new Set(semuHama.map(item => item.trim()))).filter(item => item !== "");
+    for (const hama of uniqueNamaHamaArray) {
       let idHama = await executeQuery(getDatahamaId, [`${hama}`]);
       if (idHama.length === 0) {
         await executeQuery(createDatahama, [hama]);

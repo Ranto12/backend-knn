@@ -92,7 +92,6 @@ const UploadFileExel = async (req, res, next) => {
     }
     res.json({ success: true, message: "Data inserted successfully." });
   } catch (error) {
-    console.log(error)
     return res.status(500).json({ success: false, message: "Internal server error." });
   }
 };
