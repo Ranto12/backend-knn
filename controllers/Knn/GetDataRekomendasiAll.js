@@ -8,12 +8,12 @@ const getDatarekomendasiAll = async (req, res) => {
       .status(400)
       .json({ success: false, message: "error" });
     }
-    const data = await executeQuery(getAllDataRekomendasi, [`%${search}%`, `%${search}%`, parseInt(limit), parseInt(offset)]);
-    const GetdataLength = await executeQuery(GetLengthRekomendasi, [`%${search}%`, `%${search}%`])
+    const data = await executeQuery(getAllDataRekomendasi, [`%${search}%`, parseInt(limit), parseInt(offset)]);
+    const GetdataLength = await executeQuery(GetLengthRekomendasi)
     res.status(200).json({
       success: true,
       massage: "data ready",
-      totalData: GetdataLength[0].total_data,
+      totalData: GetdataLength[0].totalData,
       data
     })
   } catch (error) {

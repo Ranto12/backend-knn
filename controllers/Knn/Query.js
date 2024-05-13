@@ -36,55 +36,29 @@ const Deletehama = `DELETE FROM hama WHERE hama_id = ?;`;
 // rekomendasi
 const GetRekomendasiByPlantId = `select rekomendasi_id from rekomendasi where plant_id = ?`;
 const GetRekomendasiByHamaId = `select rekomendasi_id from rekomendasi_hama where hama_id = ?`;
-const insertRekomendasiQuery = `INSERT INTO Rekomendasi (nitrogen, fosfor, kalium, temperature, rainfall, ph, plant_id, humadity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-const GetLengthRekomendasi = `SELECT COUNT(*) AS total_data FROM (
-    SELECT
-        r.rekomendasi_id
-    FROM
-        Rekomendasi r
-    JOIN
-        Tanaman t ON r.plant_id = t.plant_id
-    LEFT JOIN
-        Rekomendasi_Hama rh ON r.rekomendasi_id = rh.rekomendasi_id
-    LEFT JOIN
-        Hama h ON rh.hama_id = h.hama_id
-    WHERE
-        t.nama_tanaman LIKE ? OR
-        h.nama_hama LIKE ?
-    GROUP BY
-        r.rekomendasi_id
-) AS filtered_data
-`
+const insertRekomendasiQuery = `INSERT INTO Rekomendasi (nitrogen, fosfor, kalium, temperature, rainfall, ph, plant_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+const GetLengthRekomendasi = `SELECT COUNT(*) as totalData from rekomendasi;`
 const getAllDataRekomendasi = `SELECT
-    r.rekomendasi_id,
-    r.nitrogen,
-    r.fosfor,
-    r.kalium,
-    r.temperature,
-    r.humadity,
-    r.rainfall,
-    r.ph,
-    t.plant_id,
-    t.nama_tanaman,
-GROUP_CONCAT(h.hama_id) AS hama_ids,
-GROUP_CONCAT(h.nama_hama) AS nama_hama
+r.rekomendasi_id,
+r.nitrogen,
+r.fosfor,
+r.kalium,
+r.temperature,
+r.rainfall,
+r.ph,
+t.plant_id,
+t.nama_tanaman
 FROM
-    Rekomendasi r
+Rekomendasi r
 JOIN
 Tanaman t ON r.plant_id = t.plant_id
-LEFT JOIN
-    Rekomendasi_Hama rh ON r.rekomendasi_id = rh.rekomendasi_id
-LEFT JOIN
-    Hama h ON rh.hama_id = h.hama_id
 WHERE
-    t.nama_tanaman LIKE ? OR
-    h.nama_hama LIKE ?
+t.nama_tanaman LIKE ?
 GROUP BY
-    r.rekomendasi_id
-order by
-    r.rekomendasi_id desc
+r.rekomendasi_id
 limit ?
-offset ?`;
+offset ?;`;
+
 const getDataRekomendasiById = `SELECT
 r.rekomendasi_id,
 r.nitrogen,

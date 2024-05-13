@@ -27,11 +27,11 @@ const UploadFileExel = async (req, res, next) => {
       const fosfor = row.getCell("B").value;
       const kalium = row.getCell("C").value;
       const temperature = row.getCell("D").value;
-      const humadity = row.getCell("E").value;
+      // const humadity = row.getCell("E").value;
+      const ph = row.getCell("E").value;
+      // const namaHama = row.getCell("G").value;
       const rainfall = row.getCell("F").value;
-      const ph = row.getCell("G").value;
-      const namaHama = row.getCell("I").value;
-      const namaTanaman = row.getCell("H").value;
+      const namaTanaman = row.getCell("G").value;
   
       if (nitrogen === null) {
         break;
@@ -49,7 +49,6 @@ const UploadFileExel = async (req, res, next) => {
           rainfall,
           ph,
           DataIdTanaman,
-          humadity,
         ]);
       } else {
         // Insert data into Rekomendasi table
@@ -61,34 +60,33 @@ const UploadFileExel = async (req, res, next) => {
           rainfall,
           ph,
           IdTanaman.map((_id) => _id.plant_id),
-          humadity,
         ]);
       }
 
       // Get the last inserted ID
-      const rekomendasiId = await getLastInsertedId();
+      // const rekomendasiId = await getLastInsertedId();
 
       // Insert data into Rekomendasi_Hama table
-      const semuHama = namaHama.split(",");
+      // const semuHama = namaHama.split(",");
 
     // Konversi kembali ke dalam array
-    const uniqueNamaHamaArray = Array.from(new Set(semuHama.map(item => item.trim()))).filter(item => item !== "");
-      for (const hama of uniqueNamaHamaArray) {
-        let idHama = await executeQuery(getDatahamaId, [`${hama}`]);
-        if (idHama.length === 0) {
-          await executeQuery(createDatahama, [hama]);
-          const dataId = await getLastInsertedId();
-          await executeQuery(insertRekomendasiHama, [
-            rekomendasiId,
-            dataId,
-          ]);
-        } else {
-          await executeQuery(insertRekomendasiHama, [
-            rekomendasiId,
-            idHama[0].hama_id,
-          ]);
-        }
-      }
+    // const uniqueNamaHamaArray = Array.from(new Set(semuHama.map(item => item.trim()))).filter(item => item !== "");
+    //   for (const hama of uniqueNamaHamaArray) {
+    //     let idHama = await executeQuery(getDatahamaId, [`${hama}`]);
+    //     if (idHama.length === 0) {
+    //       await executeQuery(createDatahama, [hama]);
+    //       const dataId = await getLastInsertedId();
+    //       await executeQuery(insertRekomendasiHama, [
+    //         rekomendasiId,
+    //         dataId,
+    //       ]);
+    //     } else {
+    //       await executeQuery(insertRekomendasiHama, [
+    //         rekomendasiId,
+    //         idHama[0].hama_id,
+    //       ]);
+    //     }
+    //   }
     }
     res.json({ success: true, message: "Data inserted successfully." });
   } catch (error) {
